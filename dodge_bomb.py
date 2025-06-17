@@ -56,6 +56,14 @@ def gameover(screen: pg.Surface) -> None:  #演習1 定義
     return
 
 
+def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:
+    bb_accs = [a for a in range(1, 11)]
+    for r in range(1, 11):
+        bb_img = pg.Surface((20*r, 20*r))
+        pg.draw.circle(bb_img, (255, 0, 0), (10*r, 10*r), 10*r)
+        
+    # avx = vx*bb_accs[min(tmr//500, 9)]
+    # bb_img = bb_imgs[min(tmr//500, 9)]
 
 
 
@@ -85,6 +93,10 @@ def main():
                 return
         if kk_rct.colliderect(bb_rct):  #こうかとんと爆弾が衝突したら
             print("ゲームオーバー")
+
+        bb_imgs, bb_accs = init_bb_imgs() 
+        avx = vx*bb_accs[min(tmr//500, 9)]
+        bb_img = bb_imgs[min(tmr//500, 9)]
             
         screen.blit(bg_img, [0, 0]) 
         key_lst = pg.key.get_pressed()
