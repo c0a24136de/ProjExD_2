@@ -1,6 +1,7 @@
 import os
 import random  #アルファベット順
 import sys
+import time
 import pygame as pg
 
 
@@ -26,6 +27,36 @@ def check_bound(rct:pg.Rect) -> tuple[bool,bool]:
     if rct.top < 0 or HEIGHT < rct.bottom:  #縦方向の画面外判定
         tate = False
     return yoko,tate
+
+
+def gameover(screen: pg.Surface) -> None:  #演習1 定義
+
+    img = pg.Surface((WIDTH, HEIGHT))
+    pg.draw.rect(img,(0,0,0),pg.Rect(0,0,WIDTH,HEIGHT))
+    img.set_alpha(200)
+    screen.blit(img,[0,0])
+
+    img = pg.image.load("fig/8.png")
+    bg_rct1 = img.get_rect()
+    bg_rct1.center = 800,320
+
+    img = pg.image.load("fig/8.png")
+    bg_rct2 = img.get_rect()
+    bg_rct2.center = 300,320    
+
+    fonto = pg.font.Font(None,80)
+    txt = fonto.render("Game Over",True,(255,255,255))
+
+    screen.blit(img,bg_rct1)
+    screen.blit(img,bg_rct2)
+    screen.blit(txt,[400,300])
+
+    pg.display.update()
+    time.sleep(5)
+    return
+
+
+
 
 
 def main():
@@ -54,7 +85,7 @@ def main():
                 return
         if kk_rct.colliderect(bb_rct):  #こうかとんと爆弾が衝突したら
             print("ゲームオーバー")
-            return
+            
         screen.blit(bg_img, [0, 0]) 
         key_lst = pg.key.get_pressed()
         sum_mv = [0, 0]
@@ -82,6 +113,9 @@ def main():
             vx *= -1
         if not tate:  #縦方向にはみ出ていたら爆弾を反転させる
             vy *= -1
+        if kk_rct.colliderect(bb_rct):  #演習1 呼び出し
+            gameover(screen)
+            return
         pg.display.update()
         tmr += 1
         clock.tick(50)
