@@ -20,7 +20,6 @@ def check_bound(rct:pg.Rect) -> tuple[bool,bool]:
     戻り値：横方向、縦方向の画面内外判定結果
     画面内ならTrue、画面外ならFalse
     """
-
     yoko, tate = True, True  # 初期値：画面内
     if rct.left < 0 or WIDTH < rct.right:   # 横方向の画面外判定
         yoko = False
@@ -50,10 +49,10 @@ def gameover(screen: pg.Surface) -> None:  # 演習1 定義
     screen.blit(img,bg_rct1)
     screen.blit(img,bg_rct2)
     screen.blit(txt,[400,300])
-
     pg.display.update()  # 更新
     time.sleep(5)  # 5秒間
     return
+
 
 # 演習2
 # def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:
@@ -64,7 +63,6 @@ def gameover(screen: pg.Surface) -> None:  # 演習1 定義
 
     # avx = vx*bb_accs[min(tmr//500, 9)]
     # bb_img = bb_imgs[min(tmr//500, 9)]
-
 
 
 def main():
@@ -84,7 +82,6 @@ def main():
     bb_rct.centerx = random.randint(0,WIDTH)  # 横幅を超えないように設定する　center[x]という区切り　爆弾の設定
     bb_rct.centery = random.randint(0,HEIGHT)  # 縦幅を超えないように設定する center[y]という区切り　爆弾の設定
     vx,vy = +5,+5
-
     clock = pg.time.Clock()
     tmr = 0
     while True:
