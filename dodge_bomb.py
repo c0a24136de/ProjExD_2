@@ -13,6 +13,20 @@ DELTA = {  # 移動量辞書
 }
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
+def check_bound(rct:pg.Rect) -> tuple[bool,bool]:
+    """
+    引数：こうかとんRectまたは爆弾Rect
+    戻り値：横方向、縦方向の画面内外判定結果
+    画面内ならTrue、画面外ならFalse
+    """
+
+    yoko, tate = True, True  #初期値：画面内
+    if rct.left < 0 or WIDTH < rct.right:   #横方向の画面外判定
+        yoko = False
+    if rct.top < 0 or HEIGHT < rct.bottom:  #縦方向の画面外判定
+        tate = False
+    return yoko,tate
+
 
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
@@ -25,7 +39,7 @@ def main():
 
     # 新しいsurfaceはループのwhile文の前に作る
     bb_img = pg.Surface((20,20))  #空のSurfaceを作る
-    pg.draw.circle(bb_img,(255,0,0),(10,10),10)  #赤い円
+    pg.draw.circle(bb_img,(255,0,0),(10,10),10)  #赤い円　drawは色の設定
     bb_img.set_colorkey((0,0,0))
     bb_rct = bb_img.get_rect()  #爆弾を作る
     bb_rct.centerx = random.randint(0,WIDTH)  #横幅を超えないように設定する　center[x]という区切り　爆弾の設定
@@ -55,14 +69,19 @@ def main():
         # if key_lst[pg.K_RIGHT]:
         #     sum_mv[0] += 5
         kk_rct.move_ip(sum_mv)
+        if check_bound(kk_rct) != (True,True):
+            kk_rct.move_ip(-sum_mv[0], -sum_mv[1])  #移動をなかったことにする
         screen.blit(kk_img, kk_rct)
         bb_rct.move_ip(vx,vy)
-        screen.blit(bb_img, bb_rct)  #爆弾の表示
+        screen.blit(bb_img, bb_rct)  #爆弾の移動
+        yoko, tate = check_bound(bb_rct)
+        if not yoko:  #横方向にはみ出ていたら爆弾を反転させる
+            vx *= -1
+        if not tate:  #縦方向にはみ出ていたら爆弾を反転させる
+            vy *= -1
         pg.display.update()
         tmr += 1
         clock.tick(50)
-
-
 
 
 if __name__ == "__main__":
